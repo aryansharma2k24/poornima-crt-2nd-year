@@ -1,0 +1,94 @@
+# poornima-crt-2nd-year
+package InventoryManagement;
+
+import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
+public class InventoryManagementSystem extends JFrame {
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	private JTextField itemNameField, itemPriceField, itemQuantityField;
+    private JButton addButton;
+    private JTable inventoryTable;
+    private DefaultTableModel tableModel;
+
+    public InventoryManagementSystem() {
+        setTitle("Inventory Management System");
+        setSize(600, 400);
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setLayout(new BorderLayout());
+
+        
+        JPanel inputPanel = new JPanel();
+        inputPanel.setBackground(Color.LIGHT_GRAY);
+        inputPanel.setLayout(new GridLayout(4, 2));
+
+        inputPanel.add(new JLabel("Item Name:"));
+        itemNameField = new JTextField();
+        inputPanel.add(itemNameField);
+
+        inputPanel.add(new JLabel("Item Price:"));
+        itemPriceField = new JTextField();
+        inputPanel.add(itemPriceField);
+
+        inputPanel.add(new JLabel("Item Quantity:"));
+        itemQuantityField = new JTextField();
+        inputPanel.add(itemQuantityField);
+
+        addButton = new JButton("Add Item");
+        inputPanel.add(addButton);
+
+        add(inputPanel, BorderLayout.NORTH);
+
+
+        tableModel = new DefaultTableModel(new String[]{"Item Name", "Price", "Quantity"}, 0);
+        inventoryTable = new JTable(tableModel);
+        add(new JScrollPane(inventoryTable), BorderLayout.CENTER);
+       
+        
+        addButton.addActionListener(new ActionListener() {
+           
+            public void actionPerformed(ActionEvent e) {
+                addItem();
+            }
+        });
+    }
+
+    private void addItem() {
+        String name = itemNameField.getText();
+        String priceText = itemPriceField.getText();
+        String quantityText = itemQuantityField.getText();
+
+        if (name.isEmpty() || priceText.isEmpty() || quantityText.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "All fields must be filled!", "Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        try {
+            double price = Double.parseDouble(priceText);
+            int quantity = Integer.parseInt(quantityText);
+
+            tableModel.addRow(new Object[]{name, price, quantity});
+            itemNameField.setText("");
+            itemPriceField.setText("");
+            itemQuantityField.setText("");
+        } catch (NumberFormatException ex) {
+            JOptionPane.showMessageDialog(this, "Please enter valid price and quantity!", "Error", JOptionPane.ERROR_MESSAGE);
+        }
+    }
+    
+    	
+    
+
+    public static void main(String[] args) {
+        SwingUtilities.invokeLater(() -> {
+            InventoryManagementSystem inventorySystem = new InventoryManagementSystem();
+            inventorySystem.setVisible(true);
+        });
+    }
+}
